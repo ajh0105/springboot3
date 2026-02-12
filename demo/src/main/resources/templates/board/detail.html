@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+    <title>게시글 상세</title>
+</head>
+
+<div layout:fragment="content">
+    <div class="card">
+        <div class="card-header bg-white py-3">
+            <h4 class="mb-0">
+                <i class="bi bi-file-earmark-text"></i> 게시글 상세
+            </h4>
+        </div>
+
+        <div class="card-body">
+            <!-- 제목 -->
+            <div class="mb-4">
+                <h3 class="fw-bold" th:text="${board.title}"></h3>
+            </div>
+
+            <!-- 게시글 정보 -->
+            <div class="border-top border-bottom py-3 mb-4">
+                <div class="row text-muted small">
+                    <div class="col-md-4">
+                        <i class="bi bi-person"></i>
+                        <strong>작성자:</strong>
+                        <span th:text="${board.writerName}"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <i class="bi bi-calendar"></i>
+                        <strong>작성일:</strong>
+                        <span th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <i class="bi bi-eye"></i>
+                        <strong>조회수:</strong>
+                        <span th:text="${board.views}"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 내용 -->
+            <div class="mb-4" style="min-height: 300px;">
+                <div th:utext="${#strings.replace(board.content, '&#10;', '&lt;br&gt;')}"></div>
+            </div>
+
+            <!-- 버튼 그룹 -->
+            <div class="d-flex justify-content-between">
+                <a href="/board/list" class="btn btn-secondary">
+                    <i class="bi bi-list"></i> 목록
+                </a>
+
+                <!-- 작성자만 수정/삭제 가능 -->
+                <div th:if="${isWriter}">
+                    <a th:href="@{/board/edit/{id}(id=${board.id})}" class="btn btn-warning">
+                        <i class="bi bi-pencil"></i> 수정
+                    </a>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        <i class="bi bi-trash"></i> 삭제
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 삭제 확인 모달 -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">게시글 삭제</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    정말로 이 게시글을 삭제하시겠습니까?<br>
+                    삭제된 게시글은 복구할 수 없습니다.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <form th:action="@{/board/delete/{id}(id=${board.id})}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-danger">삭제</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

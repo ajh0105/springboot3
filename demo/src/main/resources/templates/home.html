@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+    <title>홈</title>
+</head>
+
+<div layout:fragment="content">
+    <div class="text-center py-5">
+        <h1 class="display-4 fw-bold mb-4">
+            <i class="bi bi-clipboard-check text-primary"></i>
+            Spring Boot 게시판 시스템
+        </h1>
+        <p class="lead text-muted mb-5">
+            회원 가입 후 게시글을 작성하고 관리할 수 있습니다
+        </p>
+
+        <div class="row g-4 mt-4">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-person-plus display-4 text-primary mb-3"></i>
+                        <h5 class="card-title">회원가입</h5>
+                        <p class="card-text">간단한 정보 입력으로 회원가입</p>
+                        <a href="/member/join" class="btn btn-primary">가입하기</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-list-ul display-4 text-success mb-3"></i>
+                        <h5 class="card-title">게시판</h5>
+                        <p class="card-text">다양한 게시글을 확인하세요</p>
+                        <a href="/board/list" class="btn btn-success">게시판 가기</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-people display-4 text-info mb-3"></i>
+                        <h5 class="card-title">회원목록</h5>
+                        <p class="card-text">가입된 회원들을 확인하세요</p>
+                        <a href="/member/list" class="btn btn-info">회원목록 보기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5" th:if="${session.loginMember == null}">
+            <p class="text-muted">이미 회원이신가요?</p>
+            <a href="/member/login" class="btn btn-outline-primary btn-lg">
+                <i class="bi bi-box-arrow-in-right"></i> 로그인
+            </a>
+        </div>
+    </div>
+</div>
+</html>

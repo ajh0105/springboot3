@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+    <title>회원 정보 수정</title>
+</head>
+
+<div layout:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-white py-3">
+                    <h4 class="mb-0 text-center">
+                        <i class="bi bi-pencil"></i> 회원 정보 수정
+                    </h4>
+                </div>
+
+                <div class="card-body p-4">
+                    <form th:action="@{/member/edit}" th:object="${memberUpdateRequest}" method="post">
+
+                        <!-- 전체 에러 메시지 -->
+                        <div th:if="${#fields.hasGlobalErrors()}"
+                             class="alert alert-danger" role="alert">
+                            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">에러</p>
+                        </div>
+
+                        <!-- 이름 -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label">
+                                이름 <span class="text-danger">*</span>
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'"
+                                   id="name"
+                                   th:field="*{name}"
+                                   placeholder="2~20자">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}"
+                                 th:errors="*{name}"></div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <p class="text-muted">
+                            <i class="bi bi-info-circle"></i>
+                            비밀번호를 변경하려면 아래 필드를 입력하세요. 변경하지 않으려면 비워두세요.
+                        </p>
+
+                        <!-- 새 비밀번호 -->
+                        <div class="mb-3">
+                            <label for="password" class="form-label">새 비밀번호</label>
+                            <input type="password"
+                                   class="form-control"
+                                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
+                                   id="password"
+                                   th:field="*{password}"
+                                   placeholder="4~20자 (변경하지 않으려면 비워두세요)">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}"
+                                 th:errors="*{password}"></div>
+                        </div>
+
+                        <!-- 새 비밀번호 확인 -->
+                        <div class="mb-4">
+                            <label for="passwordConfirm" class="form-label">새 비밀번호 확인</label>
+                            <input type="password"
+                                   class="form-control"
+                                   th:classappend="${#fields.hasErrors('passwordConfirm')} ? 'is-invalid'"
+                                   id="passwordConfirm"
+                                   th:field="*{passwordConfirm}"
+                                   placeholder="비밀번호를 다시 입력하세요">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('passwordConfirm')}"
+                                 th:errors="*{passwordConfirm}"></div>
+                        </div>
+
+                        <!-- 버튼 -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning btn-lg">
+                                <i class="bi bi-check-circle"></i> 수정하기
+                            </button>
+                            <a href="/member/mypage" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> 취소
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

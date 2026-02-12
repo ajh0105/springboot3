@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+    <title>마이페이지</title>
+</head>
+
+<div layout:fragment="content">
+    <div class="row">
+        <!-- 내 정보 -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">
+                        <i class="bi bi-person-circle"></i> 내 정보
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-person-circle display-1 text-primary"></i>
+                    </div>
+
+                    <table class="table">
+                        <tr>
+                            <th style="width: 40%">아이디</th>
+                            <td th:text="${member.username}"></td>
+                        </tr>
+                        <tr>
+                            <th>이름</th>
+                            <td th:text="${member.name}"></td>
+                        </tr>
+                        <tr>
+                            <th>가입일</th>
+                            <td th:text="${#temporals.format(member.createdAt, 'yyyy-MM-dd')}"></td>
+                        </tr>
+                        <tr>
+                            <th>작성 글</th>
+                            <td>
+                                <span class="badge bg-primary" th:text="${member.boardCount}">0</span>개
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="d-grid gap-2">
+                        <a href="/member/edit" class="btn btn-warning">
+                            <i class="bi bi-pencil"></i> 정보 수정
+                        </a>
+                        <a href="/board/write" class="btn btn-primary">
+                            <i class="bi bi-pencil-square"></i> 글쓰기
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 내가 작성한 게시글 -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">
+                        <i class="bi bi-file-earmark-text"></i> 내가 작성한 게시글
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div th:if="${myBoards.isEmpty()}" class="text-center py-5 text-muted">
+                        <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                        <p class="mt-2">작성한 게시글이 없습니다.</p>
+                        <a href="/board/write" class="btn btn-primary">
+                            <i class="bi bi-pencil-square"></i> 첫 게시글 작성하기
+                        </a>
+                    </div>
+
+                    <div th:unless="${myBoards.isEmpty()}">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                <tr>
+                                    <th style="width: 10%">번호</th>
+                                    <th style="width: 50%">제목</th>
+                                    <th style="width: 15%">조회수</th>
+                                    <th style="width: 25%">작성일</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="board, stat : ${myBoards.content}">
+                                    <td th:text="${myBoards.totalElements - (myBoards.number * myBoards.size) - stat.index}"></td>
+                                    <td>
+                                        <a th:href="@{/board/detail/{id}(id=${board.id})}"
+                                           class="text-decoration-none text-dark">
+                                            <span th:text="${board.title}"></span>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <i class="bi bi-eye"></i>
+                                        <span th:text="${board.views}"></span>
+                                    </td>
+                                    <td th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- 페이징 -->
+                        <nav th:if="${myBoards.totalPages > 0}">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" th:classappend="${myBoards.number == 0} ? 'disabled'">
+                                    <a class="page-link"
+                                       th:href="@{/member/mypage(page=${myBoards.number - 1})}">
+                                        <i class="bi bi-chevron-left"></i>
+                                    </a>
+                                </li>
+
+                                <li class="page-item"
+                                    th:each="i : ${#numbers.sequence(0, myBoards.totalPages - 1)}"
+                                    th:classappend="${i == myBoards.number} ? 'active'">
+                                    <a class="page-link"
+                                       th:href="@{/member/mypage(page=${i})}"
+                                       th:text="${i + 1}">1</a>
+                                </li>
+
+                                <li class="page-item" th:classappend="${myBoards.number + 1 >= myBoards.totalPages} ? 'disabled'">
+                                    <a class="page-link"
+                                       th:href="@{/member/mypage(page=${myBoards.number + 1})}">
+                                        <i class="bi bi-chevron-right"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

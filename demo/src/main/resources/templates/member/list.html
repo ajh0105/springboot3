@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+    <title>회원 목록</title>
+</head>
+
+<div layout:fragment="content">
+    <div class="card">
+        <div class="card-header bg-white py-3">
+            <h4 class="mb-0">
+                <i class="bi bi-people"></i> 회원 목록
+            </h4>
+        </div>
+
+        <div class="card-body">
+            <!-- 검색 폼 -->
+            <form method="get" action="/member/list" class="mb-4">
+                <div class="row g-2">
+                    <div class="col-md-3">
+                        <select name="searchType" class="form-select">
+                            <option value="">전체</option>
+                            <option value="username" th:selected="${searchType == 'username'}">아이디</option>
+                            <option value="name" th:selected="${searchType == 'name'}">이름</option>
+                            <option value="all" th:selected="${searchType == 'all'}">아이디+이름</option>
+                        </select>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="text" name="keyword" class="form-control"
+                               placeholder="검색어를 입력하세요"
+                               th:value="${keyword}">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-search"></i> 검색
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- 총 회원 수 -->
+            <div class="mb-3">
+                <span class="text-muted">
+                    총 <strong th:text="${totalElements}">0</strong>명의 회원
+                </span>
+            </div>
+
+            <!-- 회원 테이블 -->
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                    <tr>
+                        <th style="width: 10%">번호</th>
+                        <th style="width: 25%">아이디</th>
+                        <th style="width: 20%">이름</th>
+                        <th style="width: 15%">작성 글</th>
+                        <th style="width: 30%">가입일</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="member, stat : ${memberPage.content}">
+                        <td th:text="${totalElements - (currentPage * memberPage.size) - stat.index}"></td>
+                        <td>
+                            <i class="bi bi-person-circle text-primary"></i>
+                            <span th:text="${member.username}"></span>
+                        </td>
+                        <td th:text="${member.name}"></td>
+                        <td>
+                            <span class="badge bg-primary" th:text="${member.boardCount}">0</span>개
+                        </td>
+                        <td th:text="${#temporals.format(member.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                    </tr>
+
+                    <tr th:if="${memberPage.content.isEmpty()}">
+                        <td colspan="5" class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                            <p class="mt-2 mb-0">등록된 회원이 없습니다.</p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 페이징 -->
+            <nav th:if="${totalPages > 0}">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/member/list(page=${currentPage - 1}, size=${memberPage.size}, searchType=${searchType}, keyword=${keyword})}">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                    </li>
+
+                    <li class="page-item"
+                        th:each="i : ${#numbers.sequence(startPage - 1, endPage - 1)}"
+                        th:classappend="${i == currentPage} ? 'active'">
+                        <a class="page-link"
+                           th:href="@{/member/list(page=${i}, size=${memberPage.size}, searchType=${searchType}, keyword=${keyword})}"
+                           th:text="${i + 1}">1</a>
+                    </li>
+
+                    <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/member/list(page=${currentPage + 1}, size=${memberPage.size}, searchType=${searchType}, keyword=${keyword})}">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+</html>
