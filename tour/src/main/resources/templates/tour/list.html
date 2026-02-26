@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/layout">
+
+<head>
+    <title>관광지 목록</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+
+    <h2>관광지 목록</h2>
+
+    <a href="/tour/new" class="btn btn-primary mb-3">등록</a>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>이름</th>
+            <th>카테고리</th>
+            <th>관리</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="tour : ${list}">
+            <td th:text="${tour.id}"></td>
+            <td>
+                <a th:href="@{/tour/detail/{id}(id=${tour.id})}"
+                   th:text="${tour.name}"></a>
+            </td>
+            <td th:text="${tour.category}"></td>
+            <td>
+                <a th:href="@{/tour/edit/{id}(id=${tour.id})}" class="btn btn-warning btn-sm">수정</a>
+                <a th:href="@{/tour/delete/{id}(id=${tour.id})}" class="btn btn-danger btn-sm">삭제</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/layout">
+
+<head>
+    <title>관광지 상세</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+
+    <h2 th:text="${tour.name}"></h2>
+
+    <p><b>카테고리:</b> <span th:text="${tour.category}"></span></p>
+    <p><b>주소:</b> <span th:text="${tour.address}"></span></p>
+    <p><b>전화:</b> <span th:text="${tour.tel}"></span></p>
+    <p><b>설명:</b> <span th:text="${tour.comment}"></span></p>
+
+    <hr>
+
+    <h4>지도 정보</h4>
+
+    <!-- 교통 -->
+    <div th:if="${tour.trafficMap != null}">
+        <h5>교통</h5>
+        <iframe th:src="${tour.trafficMap}" width="100%" height="300"></iframe>
+    </div>
+
+    <!-- 관광 -->
+    <div th:if="${tour.tourMap != null}">
+        <h5>관광</h5>
+        <iframe th:src="${tour.tourMap}" width="100%" height="300"></iframe>
+    </div>
+
+    <!-- 음식 -->
+    <div th:if="${tour.foodMap != null}">
+        <h5>음식</h5>
+        <iframe th:src="${tour.foodMap}" width="100%" height="300"></iframe>
+    </div>
+
+    <!-- 숙박 -->
+    <div th:if="${tour.bedMap != null}">
+        <h5>숙박</h5>
+        <iframe th:src="${tour.bedMap}" width="100%" height="300"></iframe>
+    </div>
+
+    <hr>
+
+    <!-- 리뷰 작성 -->
+    <h4>리뷰 작성</h4>
+
+    <form th:action="@{/review/write}" method="post" th:object="${reviewForm}">
+
+        <input type="hidden" th:field="*{tourId}" th:value="${tour.id}">
+        <input type="hidden" name="memberId" th:value="${session.loginMember.id}">
+
+        <div class="mb-3">
+            <textarea th:field="*{comment}" class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label>평점</label>
+            <input type="number" step="0.5" min="1" max="5" th:field="*{starRate}" class="form-control">
+        </div>
+
+        <button class="btn btn-success">작성</button>
+
+    </form>
+
+    <hr>
+
+    <!-- 리뷰 목록 -->
+    <h4>리뷰 목록</h4>
+
+    <div th:each="r : ${reviews}" class="card mb-2">
+        <div class="card-body">
+
+            <p th:text="${r.comment}"></p>
+
+            <p>⭐ <span th:text="${r.starRate}"></span></p>
+
+            <a th:href="@{/review/delete/{id}(id=${r.id})}"
+               class="btn btn-danger btn-sm">삭제</a>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

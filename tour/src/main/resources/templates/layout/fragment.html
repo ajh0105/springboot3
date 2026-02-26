@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- header -->
+<div th:fragment="header">
+
+    <nav class="navbar navbar-dark bg-dark px-3">
+
+        <a class="navbar-brand" href="/">Tour</a>
+
+        <div th:if="${session.loginMember == null}">
+            <a href="/member/login" class="btn btn-light">로그인</a>
+            <a href="/member/new" class="btn btn-light">회원가입</a>
+        </div>
+
+        <div th:if="${session.loginMember != null}">
+            <span class="text-white me-2"
+                  th:text="${session.loginMember.username}"></span>
+
+            <a href="/member/logout" class="btn btn-danger">로그아웃</a>
+        </div>
+
+    </nav>
+
+</div>
+
+
+<!-- footer -->
+<div th:fragment="footer">
+    <footer class="text-center mt-5">
+        <hr>
+        <p>© Tour System</p>
+    </footer>
+</div>
+
+</body>
+</html>

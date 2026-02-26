@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/layout">
+
+<head>
+    <title>회원 목록</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+
+    <h2>회원 목록</h2>
+
+    <a href="/member/new" class="btn btn-primary mb-3">회원가입</a>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>아이디</th>
+            <th>이름</th>
+            <th>이메일</th>
+            <th>권한</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="m : ${list}">
+            <td th:text="${m.id}"></td>
+            <td th:text="${m.username}"></td>
+            <td th:text="${m.name}"></td>
+            <td th:text="${m.email}"></td>
+            <td th:text="${m.role}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>

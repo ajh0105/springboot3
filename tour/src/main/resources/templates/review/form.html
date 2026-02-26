@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/layout">
+
+<head>
+    <title>리뷰 수정</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+
+    <h2>리뷰 수정</h2>
+
+    <form th:action="@{/review/edit/{id}(id=${review.id})}"
+          method="post"
+          th:object="${review}">
+
+        <input type="hidden" th:field="*{tourId}">
+        <input type="hidden" th:field="*{memberId}">
+
+        <div class="mb-3">
+            <label>내용</label>
+            <textarea th:field="*{comment}" class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label>평점</label>
+            <input type="number" step="0.5" min="1" max="5"
+                   th:field="*{starRate}" class="form-control">
+        </div>
+
+        <button class="btn btn-primary">수정</button>
+
+    </form>
+
+</div>
+
+</body>
+</html>
